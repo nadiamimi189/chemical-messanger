@@ -8,6 +8,12 @@ if (isAdmin()) {
 }
 
 $userId  = currentUserId();
+$profileStmt = $pdo->prepare('SELECT avatar FROM users WHERE id = ?');
+$profileStmt->execute([$userId]);
+$profile = $profileStmt->fetch();
+$avatarUrl = !empty($profile['avatar'])
+    ? 'profile_media.php?id=' . (int)$userId . '&type=avatar'
+    : 'https://api.dicebear.com/7.x/initials/svg?seed=' . urlencode(currentUserName()) . '&backgroundColor=1d5aa8';
 
 /* ---------- Save member posts privately ---------- */
 $uploadError = null;
@@ -69,7 +75,7 @@ require __DIR__ . '/includes/navbar.php';
   <div class="sidebar-left">
     <div class="card member-panel">
       <div class="member-panel-profile">
-        <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode(currentUserName()); ?>&backgroundColor=1d5aa8" alt="">
+        <img class="avatar" src="<?php echo e($avatarUrl); ?>" alt="">
         <div><strong><?php echo e(currentUserName()); ?></strong><span>Community member</span></div>
       </div>
       <nav class="side-menu" aria-label="Member navigation">
@@ -98,7 +104,7 @@ require __DIR__ . '/includes/navbar.php';
         <input type="hidden" name="csrf_token" value="<?php echo csrfToken(); ?>">
         <input type="hidden" name="action" value="create_user_post">
         <div class="row1">
-          <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode(currentUserName()); ?>&backgroundColor=1d5aa8" alt="">
+          <img class="avatar" src="<?php echo e($avatarUrl); ?>" alt="">
           <textarea name="content" rows="1" placeholder="Write a post visible only to you and the Admin..."></textarea>
         </div>
         <div class="row2">

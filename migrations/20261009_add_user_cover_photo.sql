@@ -1,0 +1,2 @@
+ALTER TABLE users
+  ADD COLUMN cover_photo VARCHAR(255) DEFAULT NULL AFTER avatar;

@@ -1551,6 +1551,7 @@ body {
 }
 
 .profile-card-modern {
+  position: relative;
   border-radius: 22px;
   overflow: hidden;
 }
@@ -1558,6 +1559,8 @@ body {
 .profile-cover {
   height: 80px;
   background: linear-gradient(135deg, #0d223d 0%, #1d4e89 38%, #1ea6a3 100%);
+  background-position: center;
+  background-size: cover;
 }
 
 .profile-body {
@@ -1589,6 +1592,150 @@ body {
   color: var(--primary);
   font-size: 11px;
   font-weight: 700;
+}
+
+.profile-photo-form {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+
+.profile-photo-form label,
+.profile-photo-form button {
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: rgba(15, 35, 48, 0.82);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile-photo-form label:hover,
+.profile-photo-form button:hover {
+  background: #e46f4f;
+}
+
+.profile-photo-form input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.profile-photo-form:focus-within label {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.profile-cover-form {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.profile-body .avatar-xl {
+  object-fit: cover;
+}
+
+.profile-avatar-form {
+  position: absolute;
+  top: 48px;
+  left: 92px;
+}
+
+.profile-photo-form button {
+  background: #176b76;
+}
+
+.photo-adjust-dialog {
+  width: min(460px, calc(100% - 32px));
+  max-width: none;
+  max-height: calc(100% - 32px);
+  padding: 22px;
+  border: 1px solid #dbe5e7;
+  border-radius: 16px;
+  color: #20363d;
+  box-shadow: 0 18px 60px rgba(15, 35, 48, 0.28);
+}
+
+.photo-adjust-dialog::backdrop {
+  background: rgba(12, 29, 39, 0.65);
+}
+
+.photo-adjust-dialog h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.photo-adjust-dialog > p:not(.photo-adjust-error) {
+  margin: 0 0 16px;
+  color: #647a80;
+  font-size: 13px;
+}
+
+.photo-adjust-dialog canvas {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background: #eaf0f1;
+  object-fit: contain;
+}
+
+.photo-adjust-control {
+  display: grid;
+  gap: 5px;
+  margin: 12px 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.photo-adjust-control input {
+  width: 100%;
+  accent-color: #176b76;
+}
+
+.photo-adjust-error {
+  margin: 10px 0;
+  color: #b42318;
+  font-size: 13px;
+}
+
+.photo-adjust-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.photo-adjust-actions button {
+  border: 0;
+  border-radius: 7px;
+  padding: 9px 12px;
+  background: #edf2f3;
+  color: #20363d;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.photo-adjust-actions .photo-adjust-apply {
+  background: #176b76;
+  color: #fff;
+}
+
+.photo-adjust-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .menu-card-modern,
@@ -3415,6 +3562,15 @@ body.login-page { margin: 0; background: #193a32; }
   color: #244638;
   font-weight: 700;
   font-size: 16px;
+  overflow: hidden;
+  padding: 0;
+}
+.header-profile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
 }
 .topnav .header-dropdown .dropdown-content,
 .topnav .header-profile-dropdown .dropdown-content {

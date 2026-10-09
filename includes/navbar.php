@@ -5,6 +5,12 @@
 $assetPrefix = $assetPrefix ?? '';
 $homeHref = isAdmin() ? $assetPrefix . 'admin/dashboard.php' : $assetPrefix . 'index.php';
 $currentPage = basename($_SERVER['PHP_SELF']);
+$profileAvatarPath = null;
+if (isLoggedIn()) {
+    $profileAvatarStmt = $pdo->prepare('SELECT avatar FROM users WHERE id = ?');
+    $profileAvatarStmt->execute([currentUserId()]);
+    $profileAvatarPath = $profileAvatarStmt->fetchColumn() ?: null;
+}
 ?>
 <div class="topnav">
   <div class="header-left">
@@ -63,7 +69,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <?php endif; ?>
     <div class="dropdown header-profile-dropdown">
       <button type="button" class="header-profile" aria-label="Open profile menu" title="Profile" data-dropdown-toggle>
-        <?php echo e(strtoupper(substr(currentUserName(), 0, 1))); ?>
+        <?php if ($profileAvatarPath): ?>
+          <img src="<?php echo $assetPrefix; ?>profile_media.php?id=<?php echo (int)currentUserId(); ?>&amp;type=avatar" alt="">
+        <?php else: ?>
+          <?php echo e(strtoupper(substr(currentUserName(), 0, 1))); ?>
+        <?php endif; ?>
       </button>
       <div class="dropdown-content">
         <?php if (isAdmin()): ?>

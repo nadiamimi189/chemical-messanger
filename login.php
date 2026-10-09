@@ -97,15 +97,14 @@ require __DIR__ . '/includes/header.php';
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" value="<?php echo e($email); ?>" required maxlength="150" autocomplete="username" autofocus aria-describedby="emailHint">
-        <span class="field-hint" id="emailHint">Use the email address linked to your account.</span>
-      </div>
+        
       <div class="form-group">
         <label for="password">Password</label>
         <div class="password-control">
           <input type="password" id="password" name="password" required autocomplete="current-password" aria-describedby="passwordHint">
           <button class="password-toggle" type="button" id="passwordToggle" aria-label="Show password" aria-pressed="false">Show</button>
         </div>
-        <span class="field-hint" id="passwordHint">Your password is case-sensitive.</span>
+       
         <a class="login-forgot" href="forgot_password.php">Forgot password?</a>
       </div>
       <button type="submit" class="btn btn-primary btn-block login-submit" id="loginSubmit">
@@ -114,7 +113,6 @@ require __DIR__ . '/includes/header.php';
       </button>
     </form>
     <div class="auth-switch">New to Chemical Connect? <a href="signup.php">Create an account</a></div>
-    <p class="login-privacy">Your account is protected with a secure sign-in session.</p>
-  </section>
+   
 </main>
 <?php require __DIR__ . '/includes/footer.php'; ?>

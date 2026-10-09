@@ -88,6 +88,47 @@ function handleMediaUpload(string $fieldName, string $destDirRelative): ?array
     ];
 }
 
+function handleProfilePhotoUpload(string $fieldName): string
+{
+    if (empty($_FILES[$fieldName]) || $_FILES[$fieldName]['error'] === UPLOAD_ERR_NO_FILE) {
+        throw new RuntimeException('Choose an image to upload.');
+    }
+
+    $file = $_FILES[$fieldName];
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('Image upload failed (code ' . $file['error'] . ').');
+    }
+    if ($file['size'] > 5 * 1024 * 1024) {
+        throw new RuntimeException('Images must be 5MB or smaller.');
+    }
+
+    $fileInfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $fileInfo->file($file['tmp_name']);
+    $extensions = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'image/webp' => 'webp',
+    ];
+    $image = getimagesize($file['tmp_name']);
+    if (!isset($extensions[$mimeType]) || !$image || $image[0] * $image[1] > 30000000) {
+        throw new RuntimeException('Choose a valid JPEG, PNG, GIF, or WebP image (maximum 30 megapixels).');
+    }
+
+    $directoryRelative = 'uploads/profile_photos';
+    $directoryAbsolute = __DIR__ . '/../' . $directoryRelative;
+    if (!is_dir($directoryAbsolute) && !mkdir($directoryAbsolute, 0755, true) && !is_dir($directoryAbsolute)) {
+        throw new RuntimeException('Unable to create the profile photo upload directory.');
+    }
+
+    $filename = bin2hex(random_bytes(16)) . '.' . $extensions[$mimeType];
+    if (!move_uploaded_file($file['tmp_name'], $directoryAbsolute . '/' . $filename)) {
+        throw new RuntimeException('Failed to save the uploaded image.');
+    }
+
+    return $directoryRelative . '/' . $filename;
+}
+
 function sendUploadedMedia(string $relativePath, string $mediaType, string $expectedDirectory): void
 {
     $directory = realpath(__DIR__ . '/../' . $expectedDirectory);

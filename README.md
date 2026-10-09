@@ -67,12 +67,18 @@ vanilla JavaScript (fetch/AJAX)** on the front end — no frameworks required.
   - `SMTP_ENCRYPTION` (`tls` for STARTTLS or `ssl` for implicit TLS)
   - `SMTP_FROM_EMAIL` (must be authorized by the SMTP provider)
   - `SMTP_FROM_NAME` (optional, defaults to `Chemical Connect`)
-  - `APP_URL` (public base URL, defaults to `http://localhost/chemical-messanger`)
+  - `APP_URL` (public base URL, defaults to `http://localhost/chemical-connect`)
 
   Password reset uses PHPMailer over authenticated SMTP. Existing databases
   must also import `migrations/20261009_create_password_resets.sql`; fresh
   imports of `database.sql` already include the required token table. Reset
   links expire after one hour and can only be used once.
+
+  Existing databases must also import
+  `migrations/20261009_add_user_cover_photo.sql` to enable member cover photos.
+  Members can upload a profile photo and cover photo from the profile card on
+  the **My Posts** page, then adjust zoom and positioning before saving.
+  Images must be JPEG, PNG, GIF, or WebP and no larger than 5MB.
 
 6. **Set folder permissions** so PHP can save uploads:
    ```bash

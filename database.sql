@@ -22,6 +22,7 @@ CREATE TABLE users (
   password    VARCHAR(255)  NOT NULL,
   role        ENUM('admin','user') NOT NULL DEFAULT 'user',
   avatar      VARCHAR(255)  DEFAULT NULL,
+  cover_photo VARCHAR(255)  DEFAULT NULL,
   status      ENUM('active','blocked') NOT NULL DEFAULT 'active',
   created_at  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

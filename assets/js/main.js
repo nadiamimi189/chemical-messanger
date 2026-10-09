@@ -110,6 +110,186 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  /* ---------------- Profile and cover photo adjustment ---------------- */
+  var photoDialog = document.getElementById('photo-adjust-dialog');
+  if (photoDialog) {
+    var photoCanvas = document.getElementById('photo-adjust-preview');
+    var photoContext = photoCanvas.getContext('2d');
+    var photoZoom = document.getElementById('photo-adjust-zoom');
+    var photoPositionX = document.getElementById('photo-adjust-x');
+    var photoPositionY = document.getElementById('photo-adjust-y');
+    var photoError = document.getElementById('photo-adjust-error');
+    var applyPhotoButton = photoDialog.querySelector('.photo-adjust-apply');
+    var activePhotoForm = null;
+    var selectedPhoto = null;
+    var acceptedPhoto = null;
+    var objectUrl = null;
+
+    function getPhotoCropSize() {
+      if (activePhotoForm.dataset.photoType !== 'cover') {
+        return { width: 512, height: 512 };
+      }
+
+      var cover = document.querySelector('.profile-cover');
+      var width = 1200;
+      var height = Math.max(1, Math.round(width * cover.clientHeight / cover.clientWidth));
+      return { width: width, height: height };
+    }
+
+    function renderPhotoCrop() {
+      if (!selectedPhoto) return;
+      var cropSize = getPhotoCropSize();
+      var width = cropSize.width;
+      var height = cropSize.height;
+      var scale = Math.max(width / selectedPhoto.naturalWidth, height / selectedPhoto.naturalHeight)
+        * Number(photoZoom.value);
+      var imageWidth = selectedPhoto.naturalWidth * scale;
+      var imageHeight = selectedPhoto.naturalHeight * scale;
+      var overflowX = imageWidth - width;
+      var overflowY = imageHeight - height;
+      var offsetX = overflowX * (Number(photoPositionX.value) + 100) / 200;
+      var offsetY = overflowY * (Number(photoPositionY.value) + 100) / 200;
+
+      photoCanvas.width = width;
+      photoCanvas.height = height;
+      photoContext.clearRect(0, 0, width, height);
+      photoContext.drawImage(selectedPhoto, -offsetX, -offsetY, imageWidth, imageHeight);
+    }
+
+    function releasePhotoUrl() {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+        objectUrl = null;
+      }
+    }
+
+    function showPhotoPreview(form, file) {
+      if (form._previewUrl) {
+        URL.revokeObjectURL(form._previewUrl);
+        form._previewUrl = null;
+      }
+      if (file) {
+        form._previewUrl = URL.createObjectURL(file);
+      }
+
+      if (form.dataset.photoType === 'cover') {
+        document.querySelector('.profile-cover').style.backgroundImage = file
+          ? 'url("' + form._previewUrl + '")'
+          : form._initialBackground;
+      } else {
+        document.querySelector('.avatar-xl').src = file ? form._previewUrl : form._initialAvatar;
+      }
+    }
+
+    function restoreAcceptedPhoto() {
+      var input = activePhotoForm.querySelector('input[type="file"]');
+      var adjustButton = activePhotoForm.querySelector('.photo-adjust-open');
+      if (acceptedPhoto) {
+        var files = new DataTransfer();
+        files.items.add(acceptedPhoto);
+        input.files = files.files;
+        adjustButton.hidden = false;
+      } else {
+        input.value = '';
+        adjustButton.hidden = true;
+      }
+      showPhotoPreview(activePhotoForm, acceptedPhoto);
+      selectedPhoto = null;
+      releasePhotoUrl();
+      photoDialog.close();
+    }
+
+    function openPhotoAdjuster(form, file) {
+      activePhotoForm = form;
+      acceptedPhoto = form._acceptedPhoto || null;
+      selectedPhoto = new Image();
+      photoError.hidden = true;
+      photoError.textContent = '';
+      photoZoom.value = '1';
+      photoPositionX.value = '0';
+      photoPositionY.value = '0';
+      releasePhotoUrl();
+      objectUrl = URL.createObjectURL(file);
+      selectedPhoto.onload = function () {
+        renderPhotoCrop();
+        photoDialog.showModal();
+      };
+      selectedPhoto.onerror = function () {
+        photoError.textContent = 'This image could not be opened. Please choose another image.';
+        photoError.hidden = false;
+        restoreAcceptedPhoto();
+      };
+      selectedPhoto.src = objectUrl;
+    }
+
+    document.querySelectorAll('.profile-photo-form').forEach(function (form) {
+      var input = form.querySelector('input[type="file"]');
+      var adjustButton = form.querySelector('.photo-adjust-open');
+
+      form.dataset.photoType = form.querySelector('input[name="photo_type"]').value;
+      form._initialBackground = document.querySelector('.profile-cover').style.backgroundImage;
+      form._initialAvatar = document.querySelector('.avatar-xl').src;
+      input.addEventListener('change', function () {
+        if (input.files.length) openPhotoAdjuster(form, input.files[0]);
+      });
+      adjustButton.addEventListener('click', function () {
+        if (input.files.length) openPhotoAdjuster(form, input.files[0]);
+      });
+      form.addEventListener('submit', function (event) {
+        if (input.files.length && !form._acceptedPhoto) {
+          event.preventDefault();
+          openPhotoAdjuster(form, input.files[0]);
+        }
+      });
+    });
+
+    [photoZoom, photoPositionX, photoPositionY].forEach(function (control) {
+      control.addEventListener('input', renderPhotoCrop);
+    });
+
+    photoDialog.querySelector('.photo-adjust-cancel').addEventListener('click', restoreAcceptedPhoto);
+    photoDialog.addEventListener('cancel', function (event) {
+      event.preventDefault();
+      restoreAcceptedPhoto();
+    });
+    applyPhotoButton.addEventListener('click', function () {
+      if (!activePhotoForm || !selectedPhoto) return;
+      applyPhotoButton.disabled = true;
+      photoCanvas.toBlob(function (blob) {
+        applyPhotoButton.disabled = false;
+        if (!blob) {
+          photoError.textContent = 'Could not prepare the adjusted photo. Please try again.';
+          photoError.hidden = false;
+          return;
+        }
+
+        var input = activePhotoForm.querySelector('input[type="file"]');
+        var outputName = activePhotoForm.dataset.photoType === 'cover' ? 'cover-photo.jpg' : 'profile-photo.jpg';
+        var croppedFile = new File([blob], outputName, { type: 'image/jpeg' });
+        var files = new DataTransfer();
+        files.items.add(croppedFile);
+        input.files = files.files;
+        activePhotoForm._acceptedPhoto = croppedFile;
+        activePhotoForm.querySelector('.photo-adjust-open').hidden = false;
+
+        var previewData = photoCanvas.toDataURL('image/jpeg', 0.9);
+        if (activePhotoForm._previewUrl) {
+          URL.revokeObjectURL(activePhotoForm._previewUrl);
+          activePhotoForm._previewUrl = null;
+        }
+        if (activePhotoForm.dataset.photoType === 'cover') {
+          document.querySelector('.profile-cover').style.backgroundImage = 'url("' + previewData + '")';
+        } else {
+          document.querySelector('.avatar-xl').src = previewData;
+        }
+
+        selectedPhoto = null;
+        releasePhotoUrl();
+        photoDialog.close();
+      }, 'image/jpeg', 0.9);
+    });
+  }
+
   /* ---------------- Like toggle ---------------- */
   document.querySelectorAll('.like-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {

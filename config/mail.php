@@ -8,5 +8,5 @@ return [
     'encryption' => strtolower((string)(getenv('SMTP_ENCRYPTION') ?: 'tls')),
     'from_email' => (string)(getenv('SMTP_FROM_EMAIL') ?: getenv('SMTP_USERNAME') ?: ''),
     'from_name' => (string)(getenv('SMTP_FROM_NAME') ?: 'Chemical Connect'),
-    'app_url' => rtrim((string)(getenv('APP_URL') ?: 'http://localhost/chemical-messanger'), '/'),
+    'app_url' => rtrim((string)(getenv('APP_URL') ?: 'http://localhost/chemical-connect'), '/'),
 ];
