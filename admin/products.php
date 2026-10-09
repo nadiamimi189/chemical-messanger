@@ -38,32 +38,18 @@ $products = $productsStmt->fetchAll();
 
 $pageTitle = 'Products - Chemical Connect';
 $assetPrefix = '../';
+$activeAdminPage = 'products';
 require __DIR__ . '/../includes/header.php';
 require __DIR__ . '/../includes/navbar.php';
 ?>
 <div class="admin-shell">
-  <aside class="admin-sidebar">
-    <div class="admin-brand">
-      <div>
-        <strong>Chemical Ops</strong>
-        <span>Control center</span>
-      </div>
-    </div>
-    <nav class="admin-nav" aria-label="Admin navigation">
-      <a class="admin-nav-item" href="dashboard.php">Dashboard</a>
-      <a class="admin-nav-item" href="users.php">Members</a>
-      <a class="admin-nav-item" href="messages.php">Messages</a>
-      <a class="admin-nav-item" href="../index.php">Community</a>
-      <a class="admin-nav-item active" href="products.php">Products</a>
-      <a class="admin-nav-item" href="../logout.php">Logout</a>
-    </nav>
-    <div class="admin-sidebar-footer">
-      <div class="system-badge"><span>System status</span><span class="indicator"></span></div>
-    </div>
-  </aside>
+  <?php require __DIR__ . '/../includes/admin_sidebar.php'; ?>
 
   <main class="admin-main product-admin-main">
     <div class="dashboard-header">
+      <button class="admin-sidebar-toggle" type="button" aria-controls="adminSidebar" aria-expanded="true" aria-label="Hide navigation" title="Hide navigation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
       <div>
         <h1>Product library</h1>
         <p>Upload product photos and videos to feature them in the member feed.</p>

@@ -52,10 +52,13 @@ if (isLoggedIn()) {
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="9.5" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="16" y="9.5" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><rect x="9.5" y="16" width="5" height="5" rx="1"/><rect x="16" y="16" width="5" height="5" rx="1"/></svg>
       </button>
       <div class="dropdown-content">
-        <a href="<?php echo $homeHref; ?>"><?php echo isAdmin() ? 'Dashboard' : 'Home'; ?></a>
+        <a href="<?php echo $homeHref; ?>"><?php echo isAdmin() ? 'Newsfeed' : 'Home'; ?></a>
         <?php if (isAdmin()): ?>
           <a href="<?php echo $assetPrefix; ?>admin/users.php">Members</a>
           <a href="<?php echo $assetPrefix; ?>admin/messages.php">Messages</a>
+          <a href="<?php echo $assetPrefix; ?>admin/products.php">Products</a>
+          <a href="<?php echo $assetPrefix; ?>admin/settings.php">Settings</a>
+          <a href="<?php echo $assetPrefix; ?>admin/bulk_email.php">Bulk Email</a>
         <?php else: ?>
           <a href="<?php echo $assetPrefix; ?>my_posts.php">My Posts</a>
           <a href="#chat">Chat with Admin</a>
@@ -70,14 +73,15 @@ if (isLoggedIn()) {
     <div class="dropdown header-profile-dropdown">
       <button type="button" class="header-profile" aria-label="Open profile menu" title="Profile" data-dropdown-toggle>
         <?php if ($profileAvatarPath): ?>
-          <img src="<?php echo $assetPrefix; ?>profile_media.php?id=<?php echo (int)currentUserId(); ?>&amp;type=avatar" alt="">
+          <img src="<?php echo $assetPrefix; ?>profile_media.php?id=<?php echo (int)currentUserId(); ?>&amp;type=avatar&amp;v=<?php echo urlencode($profileAvatarPath); ?>" alt="">
         <?php else: ?>
           <?php echo e(strtoupper(substr(currentUserName(), 0, 1))); ?>
         <?php endif; ?>
       </button>
       <div class="dropdown-content">
         <?php if (isAdmin()): ?>
-          <a href="<?php echo $assetPrefix; ?>admin/dashboard.php">Admin Dashboard</a>
+          <a href="<?php echo $assetPrefix; ?>admin/dashboard.php">Admin Newsfeed</a>
+          <a href="<?php echo $assetPrefix; ?>admin/settings.php">Account Settings</a>
         <?php else: ?>
           <a href="<?php echo $assetPrefix; ?>my_posts.php">My Posts</a>
         <?php endif; ?>

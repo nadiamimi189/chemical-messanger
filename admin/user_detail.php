@@ -28,24 +28,24 @@ $posts = $postsStmt->fetchAll();
 
 $pageTitle = e($member['name']) . ' - Chemical Connect';
 $assetPrefix = '../';
+$activeAdminPage = 'members';
 require __DIR__ . '/../includes/header.php';
 require __DIR__ . '/../includes/navbar.php';
 ?>
-<div class="layout no-right">
-  <div class="sidebar-left">
-    <div class="card side-menu">
-      <a href="dashboard.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span> Dashboard</a>
-      <a href="users.php" class="active"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20v-1.2a6.2 6.2 0 0 1 12.4 0V20zM16 5a3.5 3.5 0 0 1 0 6.8M18 14a4.8 4.8 0 0 1 3.2 4.6V20h-3"/></svg></span> Members</a>
-      <a href="messages.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span> Messages</a>
+<div class="admin-shell">
+  <?php require __DIR__ . '/../includes/admin_sidebar.php'; ?>
+  <main class="admin-main">
+    <div class="dashboard-header">
+      <button class="admin-sidebar-toggle" type="button" aria-controls="adminSidebar" aria-expanded="true" aria-label="Hide navigation" title="Hide navigation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div>
+        <h1><?php echo e($member['name']); ?>'s Private Posts</h1>
+        <p>Admin-only view · <?php echo e($member['email']); ?> · Joined <?php echo timeAgo($member['created_at']); ?></p>
+      </div>
+      <a class="btn btn-sm btn-primary" href="messages.php?with=<?php echo $member['id']; ?>">Message <?php echo e($member['name']); ?></a>
     </div>
-  </div>
-  <div>
     <a href="users.php" style="font-size:13px;">&larr; Back to Members</a>
-    <div class="page-title" style="display:flex; align-items:center; gap:10px;">
-      <img class="avatar" style="width:44px;height:44px;" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($member['name']); ?>&backgroundColor=1d5aa8" alt="">
-      <?php echo e($member['name']); ?>'s Private Posts
-      <a class="btn btn-sm btn-primary" style="margin-left:auto;" href="messages.php?with=<?php echo $member['id']; ?>">Message <?php echo e($member['name']); ?></a>
-    </div>
     <div class="card notice-card" style="margin-bottom:16px;">
       <h4>Admin-only view</h4>
       <p><?php echo e($member['email']); ?> &bull; Joined <?php echo timeAgo($member['created_at']); ?>. These posts are visible only to you and <?php echo e($member['name']); ?> &mdash; no other member can see them.</p>
@@ -80,5 +80,6 @@ require __DIR__ . '/../includes/navbar.php';
       <?php endforeach; ?>
     <?php endif; ?>
   </div>
+</main>
 </div>
 <?php require __DIR__ . '/../includes/footer.php'; ?>

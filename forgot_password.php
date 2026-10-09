@@ -42,26 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->commit();
 
                 try {
-                    require_once __DIR__ . '/vendor/autoload.php';
+                    require_once __DIR__ . '/includes/mailer.php';
                     $mailConfig = require __DIR__ . '/config/mail.php';
-                    foreach (['host', 'username', 'password', 'from_email'] as $requiredSetting) {
-                        if ($mailConfig[$requiredSetting] === '') {
-                            throw new RuntimeException('Missing SMTP setting: ' . $requiredSetting);
-                        }
-                    }
-
-                    $mailer = new PHPMailer\PHPMailer\PHPMailer(true);
-                    $mailer->isSMTP();
-                    $mailer->Host = $mailConfig['host'];
-                    $mailer->SMTPAuth = true;
-                    $mailer->Username = $mailConfig['username'];
-                    $mailer->Password = $mailConfig['password'];
-                    $mailer->Port = $mailConfig['port'];
-                    $mailer->SMTPSecure = $mailConfig['encryption'] === 'ssl'
-                        ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS
-                        : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-                    $mailer->CharSet = 'UTF-8';
-                    $mailer->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
+                    $mailer = createAppMailer();
                     $mailer->addAddress($user['email'], $user['name']);
                     $mailer->isHTML(true);
                     $mailer->Subject = 'Reset your Chemical Connect password';

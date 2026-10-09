@@ -28,7 +28,7 @@ if (isAdmin()) {
 $stmt = $pdo->prepare("
     SELECT * FROM messages
     WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)
-    ORDER BY created_at ASC
+    ORDER BY created_at ASC, id ASC
 ");
 $stmt->execute([$currentId, $withId, $withId, $currentId]);
 $rows = $stmt->fetchAll();

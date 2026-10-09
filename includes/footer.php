@@ -35,6 +35,7 @@ if ($chatIsLoggedIn) {
     }
 }
 ?>
+<?php if (!isAdmin()): ?>
 <div class="chat-launcher-wrap" id="chat">
   <button type="button" class="chat-launcher" aria-label="Open chat" aria-expanded="false" aria-controls="chatPopup">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg>
@@ -75,6 +76,7 @@ if ($chatIsLoggedIn) {
     <?php endif; ?>
   </section>
 </div>
+<?php endif; ?>
 <script src="<?php echo $assetPrefix ?? ''; ?>assets/js/main.js?v=<?php echo $jsVersion; ?>"></script>
 </body>
 </html>

@@ -4,22 +4,23 @@ requireAdminRoot();
 
 $adminId = currentUserId();
 
-/* All members, with last message time + unread count, for the left list */
 $membersStmt = $pdo->query("
     SELECT u.id, u.name,
            (SELECT MAX(created_at) FROM messages m WHERE m.sender_id = u.id OR m.receiver_id = u.id) AS last_activity,
            (SELECT COUNT(*) FROM messages m WHERE m.sender_id = u.id AND m.receiver_id = " . (int)$adminId . " AND m.is_read = 0) AS unread
     FROM users u
     WHERE u.role = 'user'
-    ORDER BY last_activity IS NULL, last_activity DESC
+    ORDER BY last_activity IS NULL, last_activity DESC, u.name ASC
 ");
 $members = $membersStmt->fetchAll();
 
 $withId = (int)($_GET['with'] ?? ($members[0]['id'] ?? 0));
-
 $activeMember = null;
-foreach ($members as $m) {
-    if ((int)$m['id'] === $withId) { $activeMember = $m; break; }
+foreach ($members as $member) {
+    if ((int)$member['id'] === $withId) {
+        $activeMember = $member;
+        break;
+    }
 }
 
 $chatMessages = [];
@@ -27,7 +28,7 @@ if ($activeMember) {
     $chatStmt = $pdo->prepare("
         SELECT * FROM messages
         WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)
-        ORDER BY created_at ASC
+        ORDER BY created_at ASC, id ASC
     ");
     $chatStmt->execute([$adminId, $withId, $withId, $adminId]);
     $chatMessages = $chatStmt->fetchAll();
@@ -38,61 +39,78 @@ if ($activeMember) {
 
 $pageTitle = 'Messages - Chemical Connect';
 $assetPrefix = '../';
+$bodyClass = 'admin-messages-page';
+$activeAdminPage = 'messages';
 require __DIR__ . '/../includes/header.php';
 require __DIR__ . '/../includes/navbar.php';
 ?>
-<div class="layout no-right">
-  <div class="sidebar-left">
-    <div class="card side-menu">
-      <a href="dashboard.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span> Dashboard</a>
-      <a href="users.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20v-1.2a6.2 6.2 0 0 1 12.4 0V20zM16 5a3.5 3.5 0 0 1 0 6.8M18 14a4.8 4.8 0 0 1 3.2 4.6V20h-3"/></svg></span> Members</a>
-      <a href="messages.php" class="active"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span> Messages</a>
-    </div>
-  </div>
+<div class="admin-shell">
+  <?php require __DIR__ . '/../includes/admin_sidebar.php'; ?>
 
-  <div style="display:grid; grid-template-columns: 280px 1fr; gap:20px;">
-    <div class="card" style="padding:8px; max-height:640px; overflow-y:auto;">
-      <h4 class="panel-title" style="padding:0 8px;">Conversations</h4>
-      <?php if (empty($members)): ?>
-        <p style="font-size:13px; color:#66788c; padding:0 8px;">No members yet.</p>
-      <?php endif; ?>
-      <?php foreach ($members as $m): ?>
-        <a href="messages.php?with=<?php echo $m['id']; ?>" style="text-decoration:none; color:inherit;">
-          <div class="user-list-item" style="<?php echo (int)$m['id'] === $withId ? 'background:#e8f1fc;' : ''; ?>">
-            <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($m['name']); ?>&backgroundColor=1d5aa8" alt="">
-            <div class="info">
-              <div class="uname"><?php echo e($m['name']); ?></div>
-              <div class="uemail"><?php echo $m['last_activity'] ? timeAgo($m['last_activity']) : 'No messages yet'; ?></div>
-            </div>
-            <?php if ($m['unread'] > 0): ?><span class="badge" style="position:static;"><?php echo (int)$m['unread']; ?></span><?php endif; ?>
-          </div>
-        </a>
-      <?php endforeach; ?>
+  <main class="admin-main admin-messages-main">
+    <div class="dashboard-header">
+      <button class="admin-sidebar-toggle" type="button" aria-controls="adminSidebar" aria-expanded="true" aria-label="Hide navigation" title="Hide navigation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div>
+        <h1>Messages</h1>
+        <p>Private conversations with community members.</p>
+      </div>
     </div>
 
-    <div class="card chat-widget" style="height:640px;">
-      <?php if (!$activeMember): ?>
-        <div class="empty-state" style="margin:auto;">Select a member to start chatting.</div>
-      <?php else: ?>
-        <div class="chat-header">
-          <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($activeMember['name']); ?>&backgroundColor=1d5aa8" alt="">
-          <div><?php echo e($activeMember['name']); ?><div class="status">Private conversation</div></div>
+    <div class="admin-messages-layout">
+      <aside class="admin-conversations" aria-label="Conversations">
+        <div class="admin-conversations-heading">
+          <h2>Inbox</h2>
+          <span><?php echo count($members); ?></span>
         </div>
-        <div class="chat-body" id="chatBody">
-          <?php if (empty($chatMessages)): ?>
-            <div class="chat-empty">No messages yet with <?php echo e($activeMember['name']); ?>.</div>
-          <?php else: ?>
-            <?php foreach ($chatMessages as $m): ?>
-              <?php echo renderChatMsgHtml($m, $adminId); ?>
-            <?php endforeach; ?>
+        <div class="admin-conversation-list">
+          <?php if (empty($members)): ?>
+            <p class="admin-conversations-empty">No members yet.</p>
           <?php endif; ?>
+          <?php foreach ($members as $member): ?>
+            <a class="admin-conversation <?php echo (int)$member['id'] === $withId ? 'active' : ''; ?>" href="messages.php?with=<?php echo (int)$member['id']; ?>" <?php echo (int)$member['id'] === $withId ? 'aria-current="page"' : ''; ?>>
+              <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($member['name']); ?>&backgroundColor=1d5aa8" alt="">
+              <span class="admin-conversation-info">
+                <strong><?php echo e($member['name']); ?></strong>
+                <small><?php echo $member['last_activity'] ? timeAgo($member['last_activity']) : 'No messages yet'; ?></small>
+              </span>
+              <?php if ($member['unread'] > 0): ?><span class="admin-unread-count"><?php echo (int)$member['unread']; ?></span><?php endif; ?>
+            </a>
+          <?php endforeach; ?>
         </div>
-        <form class="chat-footer" id="chatForm" data-with-id="<?php echo $activeMember['id']; ?>">
-          <input type="text" name="message" placeholder="Reply to <?php echo e($activeMember['name']); ?>..." autocomplete="off">
-          <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-8-8 18-2.5-7.5zM10.5 13.5 21 3"/></svg></button>
-        </form>
-      <?php endif; ?>
+      </aside>
+
+      <section class="admin-message-widget chat-widget" aria-label="Selected conversation">
+        <?php if (!$activeMember): ?>
+          <div class="admin-message-placeholder">
+            <strong>Select a conversation</strong>
+            <span>Choose a member from the inbox to view the full message history.</span>
+          </div>
+        <?php else: ?>
+          <div class="chat-header">
+            <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($activeMember['name']); ?>&backgroundColor=1d5aa8" alt="">
+            <div class="admin-message-heading">
+              <strong><?php echo e($activeMember['name']); ?></strong>
+              <div class="status">Private conversation · Full history</div>
+            </div>
+          </div>
+          <div class="chat-body" id="chatBody" aria-live="polite" aria-label="Message history">
+            <?php if (empty($chatMessages)): ?>
+              <div class="chat-empty">No messages yet with <?php echo e($activeMember['name']); ?>.</div>
+            <?php else: ?>
+              <?php foreach ($chatMessages as $message): ?>
+                <?php echo renderChatMsgHtml($message, $adminId); ?>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+          <form class="chat-footer" id="chatForm" data-with-id="<?php echo (int)$activeMember['id']; ?>">
+            <input type="text" name="message" maxlength="3000" placeholder="Reply to <?php echo e($activeMember['name']); ?>..." autocomplete="off" aria-label="Write a message">
+            <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-8-8 18-2.5-7.5zM10.5 13.5 21 3"/></svg></button>
+          </form>
+        <?php endif; ?>
+      </section>
     </div>
-  </div>
+  </main>
 </div>
 <?php require __DIR__ . '/../includes/footer.php'; ?>

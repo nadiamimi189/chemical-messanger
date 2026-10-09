@@ -16,6 +16,8 @@ public sharing and private conversations enforced on the server:
 - **Direct chat with Admin** — a private 1-to-1 messaging widget. A member
   can only chat with Admin; Admin can chat with any member, and each
   conversation is private to that pair.
+- **Admin settings and bulk email** — admins can update their profile and
+  password, and email all member accounts through the configured SMTP server.
 
 Built with plain **PHP 8 + MySQL (PDO)** on the back end and **HTML, CSS and
 vanilla JavaScript (fetch/AJAX)** on the front end — no frameworks required.
@@ -112,7 +114,9 @@ chemical-connect/
 │   ├── dashboard.php        Publish public posts, view/reply to per-member comment threads
 │   ├── users.php            List of all registered members
 │   ├── user_detail.php      A single member's private uploads (admin view)
-│   └── messages.php         Admin's chat inbox (talk to any member privately)
+│   ├── messages.php         Admin's chat inbox (talk to any member privately)
+│   ├── settings.php         Update admin profile, photo, email, and password
+│   └── bulk_email.php       Email all member accounts through SMTP
 ├── api/                    AJAX endpoints (JSON)
 │   ├── add_comment.php       Post/reply to a private comment thread
 │   ├── toggle_like.php       Like/unlike a public post
@@ -127,6 +131,8 @@ chemical-connect/
 ├── includes/
 │   ├── init.php               Bootstraps session + db + helpers
 │   ├── auth.php                Login/role guard functions
+│   ├── admin_sidebar.php       Shared admin navigation
+│   ├── mailer.php              Shared PHPMailer SMTP setup
 │   ├── functions.php           Sanitization, uploads, HTML renderers
 │   ├── header.php / footer.php HTML shell
 │   └── navbar.php              Top navigation bar

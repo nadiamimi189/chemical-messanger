@@ -6,6 +6,95 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+  /* ---------------- Admin sidebar collapse ---------------- */
+  document.querySelectorAll('.admin-sidebar-toggle').forEach(function (button) {
+    var shell = button.closest('.admin-shell');
+    if (!shell) return;
+
+    var sidebar = shell.querySelector('.admin-sidebar');
+    var closeButton = shell.querySelector('.admin-sidebar-close');
+    var scrim = shell.querySelector('.admin-sidebar-scrim');
+    var mobileMode = window.matchMedia('(max-width: 760px)');
+    var storageKey = 'chemical-connect-admin-sidebar-collapsed';
+    var isCollapsed = false;
+    try {
+      isCollapsed = localStorage.getItem(storageKey) === 'true';
+    } catch (error) {
+      isCollapsed = false;
+    }
+
+    function setSidebarCollapsed(collapsed) {
+      shell.classList.toggle('admin-sidebar-collapsed', collapsed);
+      button.setAttribute('aria-expanded', String(!collapsed));
+      button.setAttribute('aria-label', collapsed ? 'Show navigation' : 'Hide navigation');
+      button.setAttribute('title', collapsed ? 'Show navigation' : 'Hide navigation');
+      try {
+        localStorage.setItem(storageKey, String(collapsed));
+      } catch (error) {
+        return;
+      }
+    }
+
+    function setMobileOpen(open) {
+      shell.classList.toggle('admin-sidebar-open', open);
+      document.body.classList.toggle('admin-sidebar-open', open);
+      button.setAttribute('aria-expanded', String(open));
+      button.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      button.setAttribute('title', open ? 'Close navigation' : 'Open navigation');
+      if (sidebar) sidebar.inert = !open;
+      if (scrim) {
+        scrim.setAttribute('aria-hidden', String(!open));
+        scrim.tabIndex = open ? 0 : -1;
+      }
+    }
+
+    function syncSidebarMode() {
+      if (mobileMode.matches) {
+        shell.classList.remove('admin-sidebar-collapsed');
+        setMobileOpen(false);
+      } else {
+        shell.classList.remove('admin-sidebar-open');
+        document.body.classList.remove('admin-sidebar-open');
+        if (sidebar) sidebar.inert = false;
+        if (scrim) {
+          scrim.setAttribute('aria-hidden', 'true');
+          scrim.tabIndex = -1;
+        }
+        setSidebarCollapsed(isCollapsed);
+      }
+    }
+
+    syncSidebarMode();
+    if (mobileMode.addEventListener) {
+      mobileMode.addEventListener('change', syncSidebarMode);
+    } else {
+      mobileMode.addListener(syncSidebarMode);
+    }
+
+    button.addEventListener('click', function () {
+      if (mobileMode.matches) {
+        setMobileOpen(!shell.classList.contains('admin-sidebar-open'));
+      } else {
+        isCollapsed = !shell.classList.contains('admin-sidebar-collapsed');
+        setSidebarCollapsed(isCollapsed);
+      }
+    });
+
+    if (closeButton) {
+      closeButton.addEventListener('click', function () {
+        setMobileOpen(false);
+        button.focus();
+      });
+    }
+    if (scrim) scrim.addEventListener('click', function () { setMobileOpen(false); });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && shell.classList.contains('admin-sidebar-open')) {
+        setMobileOpen(false);
+        button.focus();
+      }
+    });
+  });
+
   /* ---------------- Dynamic login ---------------- */
   var loginForm = document.getElementById('loginForm');
   if (loginForm) {
