@@ -43,6 +43,9 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $posts = $stmt->fetchAll();
 
+$recentProductsStmt = $pdo->query('SELECT id, name, description, media_type, created_at FROM products ORDER BY created_at DESC LIMIT 4');
+$recentProducts = $recentProductsStmt->fetchAll();
+
 $commentStmt = $pdo->prepare("
     SELECT c.*, u.name AS author_name, u.role AS author_role
     FROM post_comments c
@@ -70,21 +73,16 @@ require __DIR__ . '/includes/navbar.php';
         <div><strong><?php echo e(currentUserName()); ?></strong><span>Community member</span></div>
       </div>
       <nav class="side-menu" aria-label="Member navigation">
-        <a href="index.php" class="active"><span class="icon">🏠</span> Home</a>
-        <a href="my_posts.php"><span class="icon">👤</span> My Posts</a>
-        <a href="#chat"><span class="icon">💬</span> Chat with Admin</a>
+        <a href="index.php" class="active"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3.5 10 8.5-7 8.5 7v10a1 1 0 0 1-1 1h-5.3v-6.2h-4.4V21H4.5a1 1 0 0 1-1-1z"/></svg></span> Home</a>
+        <a href="my_posts.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg></span> My Posts</a>
+        <a href="#chat"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg></span> Chat with Admin</a>
       </nav>
-    </div>
-    <div class="card notice-card">
-      <h4>Privacy &amp; visibility</h4>
-      <p>Admin posts are shared with every member. Your posts and comment conversations stay between you and the Admin.</p>
     </div>
   </div>
 
   <!-- CENTER FEED -->
   <div class="community-feed">
     <div class="hero-banner">
-      <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=1200&auto=format&fit=crop" alt="Chemical industry">
       <div class="hero-text">
         <h1>Community for Chemical Industry Professionals</h1>
         <div class="tags">Share knowledge <span>•</span> Ask questions <span>•</span> Build your network</div>
@@ -135,7 +133,7 @@ require __DIR__ . '/includes/navbar.php';
         $likedStmt->execute([$post['id'], $userId]);
         $iLiked = (bool)$likedStmt->fetch();
       ?>
-      <div class="card post-card">
+      <div class="card post-card" id="post-<?php echo (int)$post['id']; ?>">
         <div class="post-header">
           <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($post['author_name']); ?>&backgroundColor=<?php echo $post['author_role'] === 'admin' ? '14549e' : '1d5aa8'; ?>" alt="">
           <div class="who">
@@ -182,14 +180,42 @@ require __DIR__ . '/includes/navbar.php';
     <?php endforeach; ?>
   </div>
 
-  <!-- RIGHT SIDEBAR: community info -->
-  <div class="sidebar-right">
-    <div class="card community-info">
-      <h4 class="panel-title">Community feed</h4>
-      <div class="community-info-count"><?php echo count($posts); ?><span>public posts</span></div>
-      <p>Admin announcements appear here. Member posts are private and visible only to their owner and the Admin.</p>
+  <aside class="sidebar-right product-rail" aria-labelledby="recent-products-title">
+    <div class="product-rail-heading">
+      <div>
+        <span class="product-rail-kicker">JUST ADDED</span>
+        <h2 id="recent-products-title">New products</h2>
+      </div>
+      <span class="product-rail-count"><?php echo count($recentProducts); ?></span>
     </div>
-  </div>
+    <?php if (empty($recentProducts)): ?>
+      <p class="product-rail-empty">No product uploads yet.</p>
+    <?php else: ?>
+      <div class="product-card-list">
+        <?php foreach ($recentProducts as $product): ?>
+          <article class="product-card">
+            <div class="product-card-media">
+              <?php if ($product['media_type'] === 'video'): ?>
+                <video controls muted playsinline preload="metadata" src="product_media.php?id=<?php echo (int)$product['id']; ?>"></video>
+                <span class="product-media-type">VIDEO</span>
+              <?php else: ?>
+                <img src="product_media.php?id=<?php echo (int)$product['id']; ?>" alt="<?php echo e($product['name']); ?>">
+                <span class="product-media-type">PRODUCT</span>
+              <?php endif; ?>
+            </div>
+            <div class="product-card-copy">
+              <span class="product-card-date"><?php echo e(timeAgo($product['created_at'])); ?></span>
+              <strong><?php echo e($product['name']); ?></strong>
+              <?php if (trim($product['description']) !== ''): ?>
+                <p><?php echo e($product['description']); ?></p>
+              <?php endif; ?>
+            </div>
+          </article>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+  </aside>
+
 </div>
 <footer class="site-footer">Chemical Connect &mdash; A private community platform</footer>
 <?php require __DIR__ . '/includes/footer.php'; ?>

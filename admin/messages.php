@@ -44,9 +44,9 @@ require __DIR__ . '/../includes/navbar.php';
 <div class="layout no-right">
   <div class="sidebar-left">
     <div class="card side-menu">
-      <a href="dashboard.php"><span class="icon">🏠</span> Dashboard</a>
-      <a href="users.php"><span class="icon">👥</span> Members</a>
-      <a href="messages.php" class="active"><span class="icon">✉️</span> Messages</a>
+      <a href="dashboard.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span> Dashboard</a>
+      <a href="users.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20v-1.2a6.2 6.2 0 0 1 12.4 0V20zM16 5a3.5 3.5 0 0 1 0 6.8M18 14a4.8 4.8 0 0 1 3.2 4.6V20h-3"/></svg></span> Members</a>
+      <a href="messages.php" class="active"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span> Messages</a>
     </div>
   </div>
 
@@ -72,7 +72,7 @@ require __DIR__ . '/../includes/navbar.php';
 
     <div class="card chat-widget" style="height:640px;">
       <?php if (!$activeMember): ?>
-        <div class="empty-state" style="margin:auto;"><div class="icon">✉️</div>Select a member to start chatting.</div>
+        <div class="empty-state" style="margin:auto;">Select a member to start chatting.</div>
       <?php else: ?>
         <div class="chat-header">
           <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($activeMember['name']); ?>&backgroundColor=1d5aa8" alt="">
@@ -89,7 +89,7 @@ require __DIR__ . '/../includes/navbar.php';
         </div>
         <form class="chat-footer" id="chatForm" data-with-id="<?php echo $activeMember['id']; ?>">
           <input type="text" name="message" placeholder="Reply to <?php echo e($activeMember['name']); ?>..." autocomplete="off">
-          <button type="submit">➤</button>
+          <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-8-8 18-2.5-7.5zM10.5 13.5 21 3"/></svg></button>
         </form>
       <?php endif; ?>
     </div>

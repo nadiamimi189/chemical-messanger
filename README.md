@@ -56,12 +56,30 @@ vanilla JavaScript (fetch/AJAX)** on the front end — no frameworks required.
    $DB_PASS = '';
    ```
 
-4. **Set folder permissions** so PHP can save uploads:
+4. **Install PHP dependencies** from the project root:
+  ```bash
+  composer install
+  ```
+
+5. **Configure SMTP** by setting these environment variables for Apache/PHP,
+  then restart Apache:
+  - `SMTP_HOST`, `SMTP_PORT` (usually `587`), `SMTP_USERNAME`, `SMTP_PASSWORD`
+  - `SMTP_ENCRYPTION` (`tls` for STARTTLS or `ssl` for implicit TLS)
+  - `SMTP_FROM_EMAIL` (must be authorized by the SMTP provider)
+  - `SMTP_FROM_NAME` (optional, defaults to `Chemical Connect`)
+  - `APP_URL` (public base URL, defaults to `http://localhost/chemical-messanger`)
+
+  Password reset uses PHPMailer over authenticated SMTP. Existing databases
+  must also import `migrations/20261009_create_password_resets.sql`; fresh
+  imports of `database.sql` already include the required token table. Reset
+  links expire after one hour and can only be used once.
+
+6. **Set folder permissions** so PHP can save uploads:
    ```bash
    chmod -R 755 uploads/
    ```
 
-5. **Open the site** in your browser, e.g. `http://localhost/chemical-connect/`
+7. **Open the site** in your browser, e.g. `http://localhost/chemical-connect/`
    You'll land on `login.php`.
 
 ### Quick local test (no Apache needed)

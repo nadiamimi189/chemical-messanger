@@ -27,6 +27,19 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ---------------------------------------------------------
+-- One-time password reset links (only token hashes are stored).
+-- ---------------------------------------------------------
+CREATE TABLE password_resets (
+  token_hash  CHAR(64) PRIMARY KEY,
+  user_id     INT NOT NULL,
+  created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  expires_at  DATETIME NOT NULL,
+  CONSTRAINT fk_password_resets_user
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_password_resets_user_created (user_id, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------------------------------------------------------
 -- Public community posts created by Admin.
 -- Visible in every member's feed.
 -- ---------------------------------------------------------
@@ -55,6 +68,22 @@ CREATE TABLE user_posts (
   created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_user_posts_user
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------------------------------------------------------
+-- Public products uploaded by Admin and shown in the member feed rail.
+-- ---------------------------------------------------------
+CREATE TABLE products (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  admin_id    INT NOT NULL,
+  name        VARCHAR(150) NOT NULL,
+  description TEXT,
+  media_path  VARCHAR(255) NOT NULL,
+  media_type  ENUM('image','video') NOT NULL,
+  created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_products_admin
+    FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_products_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ---------------------------------------------------------

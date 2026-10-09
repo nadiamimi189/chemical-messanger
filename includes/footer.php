@@ -37,7 +37,7 @@ if ($chatIsLoggedIn) {
 ?>
 <div class="chat-launcher-wrap" id="chat">
   <button type="button" class="chat-launcher" aria-label="Open chat" aria-expanded="false" aria-controls="chatPopup">
-    <span aria-hidden="true">💬</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg>
   </button>
 
   <section class="chat-popup chat-widget" id="chatPopup" role="dialog" aria-labelledby="chatPopupTitle" aria-hidden="true">
@@ -54,7 +54,7 @@ if ($chatIsLoggedIn) {
           <div class="status">Chemical Connect support</div>
         </div>
       <?php endif; ?>
-      <button type="button" class="chat-close" aria-label="Close chat">✕</button>
+      <button type="button" class="chat-close" aria-label="Close chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
     </div>
 
     <?php if (!$chatIsLoggedIn): ?>
@@ -70,7 +70,7 @@ if ($chatIsLoggedIn) {
       </div>
       <form class="chat-footer" id="floatingChatForm" data-with-id="<?php echo $chatWithId; ?>">
         <input type="text" name="message" placeholder="Type a message..." autocomplete="off" aria-label="Type a message">
-        <button type="submit" aria-label="Send message">➤</button>
+        <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-8-8 18-2.5-7.5zM10.5 13.5 21 3"/></svg></button>
       </form>
     <?php endif; ?>
   </section>

@@ -36,9 +36,9 @@ require __DIR__ . '/includes/navbar.php';
     </div>
 
     <div class="menu-card-modern">
-      <a href="index.php" class="nav-link-modern"><span>🏠</span> Home</a>
-      <a href="my_posts.php" class="nav-link-modern active"><span>🖼️</span> My Posts</a>
-      <a href="index.php#chat" class="nav-link-modern"><span>💬</span> Chat with Admin</a>
+      <a href="index.php" class="nav-link-modern"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3.5 10 8.5-7 8.5 7v10a1 1 0 0 1-1 1h-5.3v-6.2h-4.4V21H4.5a1 1 0 0 1-1-1z"/></svg></span> Home</a>
+      <a href="my_posts.php" class="nav-link-modern active"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg></span> My Posts</a>
+      <a href="index.php#chat" class="nav-link-modern"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg></span> Chat with Admin</a>
     </div>
   </aside>
 

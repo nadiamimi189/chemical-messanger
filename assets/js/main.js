@@ -6,6 +6,89 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+  /* ---------------- Dynamic login ---------------- */
+  var loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    var loginEmail = loginForm.querySelector('#email');
+    var loginPassword = loginForm.querySelector('#password');
+    var passwordToggle = document.getElementById('passwordToggle');
+    var loginFeedback = document.getElementById('loginFeedback');
+    var loginSubmit = document.getElementById('loginSubmit');
+    var loginButtonLabel = loginSubmit.querySelector('.button-label');
+    var serverAlerts = document.querySelectorAll('.login-card > .alert');
+
+    function showLoginFeedback(message, kind) {
+      loginFeedback.textContent = message;
+      loginFeedback.className = 'login-feedback ' + kind;
+      loginFeedback.hidden = false;
+    }
+
+    function clearLoginFeedback() {
+      loginFeedback.hidden = true;
+      loginFeedback.textContent = '';
+      loginFeedback.className = 'login-feedback';
+      serverAlerts.forEach(function (alert) { alert.remove(); });
+    }
+
+    function validateEmail(showError) {
+      var valid = loginEmail.value.trim() !== '' && loginEmail.validity.valid;
+      loginEmail.setAttribute('aria-invalid', String(showError && !valid));
+      return valid;
+    }
+
+    loginEmail.addEventListener('blur', function () { validateEmail(true); });
+    loginEmail.addEventListener('input', function () {
+      validateEmail(false);
+      clearLoginFeedback();
+    });
+    loginPassword.addEventListener('input', clearLoginFeedback);
+
+    passwordToggle.addEventListener('click', function () {
+      var reveal = loginPassword.type === 'password';
+      loginPassword.type = reveal ? 'text' : 'password';
+      passwordToggle.textContent = reveal ? 'Hide' : 'Show';
+      passwordToggle.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+      passwordToggle.setAttribute('aria-pressed', String(reveal));
+      loginPassword.focus();
+    });
+
+    loginForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      clearLoginFeedback();
+      validateEmail(true);
+
+      if (!loginForm.reportValidity()) return;
+
+      loginSubmit.disabled = true;
+      loginSubmit.classList.add('is-loading');
+      loginButtonLabel.textContent = 'Signing in';
+
+      fetch(loginForm.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(loginForm)
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            if (!response.ok || !data.success) {
+              throw new Error((data.errors || ['Unable to sign in. Please try again.']).join(' '));
+            }
+            return data;
+          });
+        })
+        .then(function (data) {
+          showLoginFeedback('Signed in. Redirecting...', 'is-success');
+          window.location.assign(data.redirect);
+        })
+        .catch(function (error) {
+          showLoginFeedback(error.message || 'Unable to sign in. Please try again.', 'is-error');
+          loginSubmit.disabled = false;
+          loginSubmit.classList.remove('is-loading');
+          loginButtonLabel.textContent = 'Log in';
+        });
+    });
+  }
+
   /* ---------------- User dropdown ---------------- */
   document.querySelectorAll('[data-dropdown-toggle]').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
@@ -192,6 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('a[href="#chat"]').forEach(function (link) {
       link.addEventListener('click', function (event) {
         event.preventDefault();
+        event.stopPropagation();
         toggleChatPopup(true);
       });
     });

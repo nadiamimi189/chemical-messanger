@@ -34,9 +34,9 @@ require __DIR__ . '/../includes/navbar.php';
 <div class="layout no-right">
   <div class="sidebar-left">
     <div class="card side-menu">
-      <a href="dashboard.php"><span class="icon">🏠</span> Dashboard</a>
-      <a href="users.php" class="active"><span class="icon">👥</span> Members</a>
-      <a href="messages.php"><span class="icon">✉️</span> Messages</a>
+      <a href="dashboard.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span> Dashboard</a>
+      <a href="users.php" class="active"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20v-1.2a6.2 6.2 0 0 1 12.4 0V20zM16 5a3.5 3.5 0 0 1 0 6.8M18 14a4.8 4.8 0 0 1 3.2 4.6V20h-3"/></svg></span> Members</a>
+      <a href="messages.php"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span> Messages</a>
     </div>
   </div>
   <div>
@@ -47,12 +47,12 @@ require __DIR__ . '/../includes/navbar.php';
       <a class="btn btn-sm btn-primary" style="margin-left:auto;" href="messages.php?with=<?php echo $member['id']; ?>">Message <?php echo e($member['name']); ?></a>
     </div>
     <div class="card notice-card" style="margin-bottom:16px;">
-      <h4>🔒 Admin-only view</h4>
+      <h4>Admin-only view</h4>
       <p><?php echo e($member['email']); ?> &bull; Joined <?php echo timeAgo($member['created_at']); ?>. These posts are visible only to you and <?php echo e($member['name']); ?> &mdash; no other member can see them.</p>
     </div>
 
     <?php if (empty($posts)): ?>
-      <div class="card empty-state"><div class="icon">🖼️</div>This member hasn't posted anything yet.</div>
+      <div class="card empty-state">This member hasn't posted anything yet.</div>
     <?php else: ?>
       <?php foreach ($posts as $post): ?>
         <?php $mediaUrl = ($post['post_type'] === 'legacy_private' ? '../post_media.php?id=' : '../private_media.php?id=') . (int)$post['id']; ?>
