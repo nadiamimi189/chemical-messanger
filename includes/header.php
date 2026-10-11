@@ -4,7 +4,7 @@
  * Expects $assetPrefix to be '' for root pages or '../' for pages inside /admin.
  */
 $assetPrefix = $assetPrefix ?? '';
-$pageTitle = $pageTitle ?? 'Chemical Connect';
+$pageTitle = $pageTitle ?? 'AR Tech messanger';
 $cssFile = __DIR__ . '/../assets/css/style.css';
 $cssVersion = file_exists($cssFile) ? filemtime($cssFile) : time();
 ?>

@@ -48,7 +48,7 @@ if (!$success && $tokenHash !== '') {
     $tokenValid = (bool)$stmt->fetch();
 }
 
-$pageTitle = 'Reset Password - Chemical Connect';
+$pageTitle = 'Reset Password - AR Tech messanger';
 $bodyClass = 'login-page';
 $csrfToken = csrfToken();
 require __DIR__ . '/includes/header.php';

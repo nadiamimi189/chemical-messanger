@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mailer->Subject = $subject;
             $mailer->Body = '<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#20363d">'
                 . '<p>' . nl2br(e($message), false) . '</p>'
-                . '<p style="margin-top:28px;color:#647a80">Chemical Connect</p></div>';
-            $mailer->AltBody = $message . "\n\nChemical Connect";
+                . '<p style="margin-top:28px;color:#647a80">AR Tech messanger</p></div>';
+            $mailer->AltBody = $message . "\n\nAR Tech messanger";
 
             foreach ($recipients as $recipient) {
                 $mailer->clearAllRecipients();
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle = 'Bulk Email - Chemical Connect';
+$pageTitle = 'Bulk Email - AR Tech messanger';
 $assetPrefix = '../';
 $activeAdminPage = 'bulk-email';
 require __DIR__ . '/../includes/header.php';

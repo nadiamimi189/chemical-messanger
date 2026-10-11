@@ -1,4 +1,4 @@
-# Chemical Connect
+# AR Tech messanger
 
 A member-based social platform built for a chemical industry community, with
 public sharing and private conversations enforced on the server:
@@ -68,7 +68,7 @@ vanilla JavaScript (fetch/AJAX)** on the front end — no frameworks required.
   - `SMTP_HOST`, `SMTP_PORT` (usually `587`), `SMTP_USERNAME`, `SMTP_PASSWORD`
   - `SMTP_ENCRYPTION` (`tls` for STARTTLS or `ssl` for implicit TLS)
   - `SMTP_FROM_EMAIL` (must be authorized by the SMTP provider)
-  - `SMTP_FROM_NAME` (optional, defaults to `Chemical Connect`)
+  - `SMTP_FROM_NAME` (optional, defaults to `AR Tech messanger`)
   - `APP_URL` (public base URL, defaults to `http://localhost/chemical-connect`)
 
   Password reset uses PHPMailer over authenticated SMTP. Existing databases

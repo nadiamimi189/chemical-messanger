@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
 $productsStmt = $pdo->query('SELECT id, name, description, media_type, created_at FROM products ORDER BY created_at DESC');
 $products = $productsStmt->fetchAll();
 
-$pageTitle = 'Products - Chemical Connect';
+$pageTitle = 'Products - AR Tech messanger';
 $assetPrefix = '../';
 $activeAdminPage = 'products';
 require __DIR__ . '/../includes/header.php';

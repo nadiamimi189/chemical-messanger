@@ -47,18 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mailer = createAppMailer();
                     $mailer->addAddress($user['email'], $user['name']);
                     $mailer->isHTML(true);
-                    $mailer->Subject = 'Reset your Chemical Connect password';
+                    $mailer->Subject = 'Reset your AR Tech messanger password';
 
                     $resetUrl = $mailConfig['app_url'] . '/reset_password.php?token=' . urlencode($token);
                     $safeName = htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8');
                     $safeUrl = htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8');
                     $mailer->Body = '<p>Hello ' . $safeName . ',</p>'
-                        . '<p>Use the link below to choose a new Chemical Connect password. '
+                        . '<p>Use the link below to choose a new AR Tech messanger password. '
                         . 'This link expires in one hour and can only be used once.</p>'
                         . '<p><a href="' . $safeUrl . '">Reset your password</a></p>'
                         . '<p>If you did not request this, you can ignore this email.</p>';
                     $mailer->AltBody = "Hello " . $user['name'] . ",\n\n"
-                        . "Reset your Chemical Connect password using this link (expires in one hour):\n"
+                        . "Reset your AR Tech messanger password using this link (expires in one hour):\n"
                         . $resetUrl . "\n\nIf you did not request this, ignore this email.";
                     $mailer->send();
                 } catch (Throwable $exception) {
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle = 'Forgot Password - Chemical Connect';
+$pageTitle = 'Forgot Password - AR Tech messanger';
 $bodyClass = 'login-page';
 $csrfToken = csrfToken();
 require __DIR__ . '/includes/header.php';

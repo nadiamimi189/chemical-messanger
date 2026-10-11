@@ -1,5 +1,5 @@
 /**
- * Chemical Connect - front-end behaviour
+ * AR Tech messanger - front-end behaviour
  * Handles: AJAX comment posting, chat send/poll, like toggle,
  * media file preview, admin thread switching.
  */

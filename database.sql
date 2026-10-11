@@ -1,5 +1,5 @@
 -- =========================================================
--- Chemical Connect - Database Schema
+-- AR Tech messanger - Database Schema
 -- A moderated social platform for a chemical industry
 -- community (public member/Admin feed + private
 -- per-user comment threads + private user uploads +
@@ -162,4 +162,4 @@ INSERT INTO users (name, email, password, role) VALUES
 
 -- Sample welcome post from Admin
 INSERT INTO admin_posts (admin_id, content) VALUES
-(1, 'Welcome to Chemical Connect! Please follow all safety guidelines and company policy. Feel free to comment below if you have any questions -- only you and the Admin team will see your comment.');
+(1, 'Welcome to AR Tech messanger! Please follow all safety guidelines and company policy. Feel free to comment below if you have any questions -- only you and the Admin team will see your comment.');

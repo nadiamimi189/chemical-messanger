@@ -25,7 +25,7 @@ if ($searchQuery !== '') {
     $productResults = $productStmt->fetchAll();
 }
 
-$pageTitle = 'Search - Chemical Connect';
+$pageTitle = 'Search - AR Tech messanger';
 $assetPrefix = '';
 $bodyClass = isAdmin() ? '' : 'member-app';
 require __DIR__ . '/includes/header.php';
@@ -35,7 +35,7 @@ $homeHref = isAdmin() ? 'admin/dashboard.php' : 'index.php';
 <main class="search-page">
   <header class="search-page-heading">
     <span class="product-rail-kicker">COMMUNITY SEARCH</span>
-    <h1><?php echo $searchQuery !== '' ? 'Results for “' . e($searchQuery) . '”' : 'Search Chemical Connect'; ?></h1>
+    <h1><?php echo $searchQuery !== '' ? 'Results for “' . e($searchQuery) . '”' : 'Search AR Tech messanger'; ?></h1>
     <?php if ($searchQuery !== ''): ?>
       <p><?php echo count($postResults) + count($productResults); ?> public result<?php echo count($postResults) + count($productResults) === 1 ? '' : 's'; ?></p>
     <?php else: ?>

@@ -4,7 +4,7 @@ $activeAdminPage = $activeAdminPage ?? '';
 <aside class="admin-sidebar" id="adminSidebar">
   <div class="admin-brand">
     <div>
-      <strong>Chemical Connect</strong>
+      <strong>AR Tech messanger</strong>
       <span>Admin workspace</span>
     </div>
     <button class="admin-sidebar-close" type="button" aria-label="Close navigation" title="Close navigation">

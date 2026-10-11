@@ -1,5 +1,5 @@
 /* =========================================================
-   Chemical Connect - Stylesheet
+   AR Tech messanger - Stylesheet
    ========================================================= */
 
 :root {
@@ -358,8 +358,23 @@ button {
   margin-left: 6px; vertical-align: middle;
 }
 .post-content { font-size: 14.5px; line-height: 1.5; margin-bottom: 10px; white-space: pre-wrap; word-wrap: break-word; }
-.post-media { border-radius: 8px; overflow: hidden; margin-bottom: 10px; max-height: 480px; }
-.post-media img, .post-media video { width: 100%; max-height: 480px; object-fit: cover; background: #000; }
+.post-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  max-height: min(70vh, 680px);
+  overflow: hidden;
+  border-radius: 12px;
+  background: #edf1f2;
+}
+.post-media img, .post-media video {
+  display: block;
+  width: 100%;
+  max-height: min(70vh, 680px);
+  object-fit: contain;
+  background: #101719;
+}
 
 .post-stats {
   display: flex; justify-content: space-between; align-items: center;
@@ -1882,9 +1897,12 @@ body {
 }
 
 .post-media-modern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 20px;
   overflow: hidden;
-  background: #f3f6fa;
+  background: #edf1f2;
   border: 1px solid var(--border);
 }
 
@@ -1892,9 +1910,9 @@ body {
 .post-media-modern video {
   display: block;
   width: 100%;
-  max-height: 560px;
-  object-fit: cover;
-  background: #000;
+  max-height: min(70vh, 680px);
+  object-fit: contain;
+  background: #101719;
 }
 
 .empty-feed-state {
@@ -3576,8 +3594,54 @@ body.login-page { margin: 0; background: #193a32; }
   background: #fff;
   box-shadow: 0 5px 16px rgba(28, 62, 70, 0.06);
 }
-.admin-product-card .product-card-media { aspect-ratio: 1.6 / 1; }
-.admin-product-card .product-card-copy p { margin: 0; color: #647a80; font-size: 12px; line-height: 1.5; }
+.admin-product-card .product-card-media {
+  position: relative;
+  aspect-ratio: 1.55 / 1;
+  overflow: hidden;
+  background: linear-gradient(135deg, #dff2f1, #fce8df);
+}
+.admin-product-card .product-card-media img,
+.admin-product-card .product-card-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-product-card .product-media-type {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 4px 6px;
+  border-radius: 3px;
+  background: rgba(23, 49, 58, 0.82);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.admin-product-card .product-card-copy { display: grid; gap: 5px; padding: 11px 12px 13px; }
+.admin-product-card .product-card-date { color: #e46f4f; font-size: 10px; font-weight: 700; }
+.admin-product-card .product-card-copy strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #20363d;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.admin-product-card .product-card-copy p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #647a80;
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 
 @media (max-width: 860px) {
   .admin-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -4071,4 +4135,135 @@ body.member-app .search-result-copy a:hover { color: #e46f4f; }
   .search-page-heading h1 { font-size: 25px; }
   .search-post-result { padding: 14px; }
   .search-product-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Responsive post presentation ---------- */
+body.member-app .post-card,
+body.member-app .post-card-modern {
+  min-width: 0;
+  overflow: hidden;
+}
+
+body.member-app .post-header .who,
+body.member-app .who-modern {
+  min-width: 0;
+}
+
+body.member-app .post-header .avatar {
+  flex: 0 0 34px;
+}
+
+body.member-app .post-header .name,
+body.member-app .name-modern,
+body.member-app .post-header .meta,
+body.member-app .meta-modern {
+  overflow-wrap: anywhere;
+}
+
+body.member-app .post-content,
+body.member-app .post-content-modern {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+body.member-app .post-media,
+body.member-app .post-media-modern {
+  width: 100%;
+  max-height: min(75vh, 720px);
+  background: #101719;
+}
+
+body.member-app .post-media img,
+body.member-app .post-media video,
+body.member-app .post-media-modern img,
+body.member-app .post-media-modern video {
+  width: 100%;
+  height: auto;
+  max-height: min(75vh, 720px);
+  object-fit: contain;
+}
+
+body.member-app .post-actions button {
+  min-width: 0;
+  min-height: 44px;
+}
+
+body.member-app .comment-bubble {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+body.member-app .comment-form input {
+  min-width: 0;
+  min-height: 44px;
+}
+
+body.member-app .comment-form .btn {
+  min-height: 44px;
+}
+
+@media (max-width: 600px) {
+  body.member-app .social-shell {
+    margin-top: 14px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  body.member-app .post-card-modern {
+    padding: 15px 14px;
+    border-radius: 10px;
+  }
+
+  body.member-app .post-header-modern {
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+
+  body.member-app .privacy-badge {
+    margin-left: auto;
+  }
+
+  body.member-app .post-media,
+  body.member-app .post-media-modern {
+    max-height: 70vh;
+    border-radius: 8px;
+  }
+
+  body.member-app .post-media img,
+  body.member-app .post-media video,
+  body.member-app .post-media-modern img,
+  body.member-app .post-media-modern video {
+    max-height: 70vh;
+  }
+
+  body.member-app .post-actions button {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  body.member-app .post-card,
+  body.member-app .post-card-modern {
+    padding: 12px;
+  }
+
+  body.member-app .post-header .meta,
+  body.member-app .meta-modern {
+    font-size: 11px;
+  }
+
+  body.member-app .privacy-badge {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  body.member-app .comment-form {
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  body.member-app .comment-form .btn {
+    padding: 6px 9px;
+  }
 }

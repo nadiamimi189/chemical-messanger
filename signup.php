@@ -56,14 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle = 'Sign Up - Chemical Connect';
+$pageTitle = 'Sign Up - AR Tech messanger';
 require __DIR__ . '/includes/header.php';
 ?>
 <div class="auth-wrap">
   <div class="auth-card">
     <div class="brand-row">
-      <div class="brand-icon">🧪</div>
-      <h1>Chemical Connect</h1>
+      <div class="brand-icon">💬</div>
+      <h1>AR Tech messanger</h1>
     </div>
     <p class="sub">Create your account to join the community. Sign up requires only your name and email &mdash; without an account you can't view any posts or discussions.</p>
 

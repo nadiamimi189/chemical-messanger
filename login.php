@@ -55,24 +55,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle = 'Log In - Chemical Connect';
+$pageTitle = 'Log In - AR Tech messanger';
 $bodyClass = 'login-page';
 $csrfToken = csrfToken();
 require __DIR__ . '/includes/header.php';
 ?>
 <main class="auth-wrap login-wrap">
   <section class="login-intro" aria-labelledby="login-intro-title">
-    <a class="login-brand" href="index.php" aria-label="Chemical Connect home">
-      <span class="brand-icon" aria-hidden="true">🧪</span>
-      <span>Chemical Connect</span>
+    <a class="login-brand" href="index.php" aria-label="AR Tech messanger home">
+      <span class="brand-icon" aria-hidden="true">💬</span>
+      <span>AR Tech messanger</span>
     </a>
     <div class="login-intro-copy">
-      <p class="login-eyebrow">THE CHEMISTRY COMMUNITY</p>
+      <p class="login-eyebrow">A COMMUNITY THAT CONNECTS</p>
       <h1 id="login-intro-title">Good ideas react<br>when we connect.</h1>
       <p>Pick up where your curiosity left off. Sign in to join the conversation.</p>
     </div>
     <div class="login-note" aria-hidden="true">
-      <span class="login-note-mark">CC</span>
+      <span class="login-note-mark">AR</span>
       <span>Knowledge grows through exchange.</span>
     </div>
   </section>
@@ -112,7 +112,7 @@ require __DIR__ . '/includes/header.php';
         <span class="button-spinner" aria-hidden="true"></span>
       </button>
     </form>
-    <div class="auth-switch">New to Chemical Connect? <a href="signup.php">Create an account</a></div>
+    <div class="auth-switch">New to AR Tech messanger? <a href="signup.php">Create an account</a></div>
    
 </main>
 <?php require __DIR__ . '/includes/footer.php'; ?>

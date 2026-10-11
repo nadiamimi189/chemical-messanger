@@ -26,7 +26,7 @@ $postsStmt = $pdo->prepare("
 $postsStmt->execute([$targetId, $targetId]);
 $posts = $postsStmt->fetchAll();
 
-$pageTitle = e($member['name']) . ' - Chemical Connect';
+$pageTitle = e($member['name']) . ' - AR Tech messanger';
 $assetPrefix = '../';
 $activeAdminPage = 'members';
 require __DIR__ . '/../includes/header.php';
@@ -56,13 +56,14 @@ require __DIR__ . '/../includes/navbar.php';
     <?php else: ?>
       <?php foreach ($posts as $post): ?>
         <?php $mediaUrl = ($post['post_type'] === 'legacy_private' ? '../post_media.php?id=' : '../private_media.php?id=') . (int)$post['id']; ?>
-        <div class="card post-card">
+        <div class="card post-card" id="post-<?php echo (int)$post['id']; ?>">
           <div class="post-header">
             <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo urlencode($member['name']); ?>&backgroundColor=1d5aa8" alt="">
             <div class="who">
               <div class="name"><?php echo e($member['name']); ?></div>
               <div class="meta"><?php echo timeAgo($post['created_at']); ?></div>
             </div>
+            <button type="button" class="btn btn-sm btn-outline" onclick="deletePost(<?php echo (int)$post['id']; ?>, '<?php echo e($post['post_type']); ?>', this)">Delete</button>
           </div>
           <?php if ($post['content']): ?>
             <div class="post-content"><?php echo nl2br(e($post['content'])); ?></div>
@@ -82,4 +83,33 @@ require __DIR__ . '/../includes/navbar.php';
   </div>
 </main>
 </div>
-<?php require __DIR__ . '/../includes/footer.php'; ?>
+  <script>
+    const deletePostCsrfToken = <?php echo json_encode(csrfToken()); ?>;
+
+    function deletePost(id, postType, btn) {
+      if (!confirm('Delete this post? This cannot be undone.')) return;
+      btn.disabled = true;
+      fetch('../api/delete_post.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          post_id: String(id),
+          post_type: postType,
+          csrf_token: deletePostCsrfToken
+        })
+      }).then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok || !data.success) throw new Error(data.message || 'Unable to delete this post.');
+          return data;
+        });
+      }).then(function () {
+        const postCard = btn.closest('.post-card');
+        if (!postCard) throw new Error('Could not find the post to remove from this page.');
+        postCard.remove();
+      }).catch(function (error) {
+        window.alert(error.message || 'Unable to delete this post. Please try again.');
+        btn.disabled = false;
+      });
+    }
+  </script>
+  <?php require __DIR__ . '/../includes/footer.php'; ?>

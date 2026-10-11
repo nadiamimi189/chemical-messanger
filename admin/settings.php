@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle = 'Admin Settings - Chemical Connect';
+$pageTitle = 'Admin Settings - AR Tech messanger';
 $assetPrefix = '../';
 $activeAdminPage = 'settings';
 require __DIR__ . '/../includes/header.php';

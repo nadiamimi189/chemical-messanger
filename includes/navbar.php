@@ -14,14 +14,14 @@ if (isLoggedIn()) {
 ?>
 <div class="topnav">
   <div class="header-left">
-    <a href="<?php echo $homeHref; ?>" class="brand" aria-label="Chemical Connect home">
+    <a href="<?php echo $homeHref; ?>" class="brand" aria-label="AR Tech messanger home">
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3.5 26.8 9.7v12.6L16 28.5 5.2 22.3V9.7z"/><path d="M11 20V12h2.2l2.8 4.2 2.8-4.2H21v8h-2v-4.8l-3 4.1-3-4.1V20z"/></svg></span>
     </a>
     <form class="header-search" role="search" method="get" action="<?php echo $assetPrefix; ?>search.php">
       <button class="search-submit" type="submit" aria-label="Search" title="Search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
       </button>
-      <input type="search" name="q" value="<?php echo e($_GET['q'] ?? ''); ?>" placeholder="Search Chemical Connect" aria-label="Search community">
+      <input type="search" name="q" value="<?php echo e($_GET['q'] ?? ''); ?>" placeholder="Search AR Tech messanger" aria-label="Search community">
     </form>
   </div>
 

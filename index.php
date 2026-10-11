@@ -63,7 +63,7 @@ $commentStmt = $pdo->prepare("
 $likeCountStmt = $pdo->prepare('SELECT COUNT(*) AS c FROM post_likes WHERE post_id = ?');
 $likedStmt = $pdo->prepare('SELECT 1 FROM post_likes WHERE post_id = ? AND user_id = ?');
 
-$pageTitle = 'Home - Chemical Connect';
+$pageTitle = 'Home - AR Tech messanger';
 $assetPrefix = '';
 $bodyClass = 'member-app';
 require __DIR__ . '/includes/header.php';
@@ -223,5 +223,5 @@ require __DIR__ . '/includes/navbar.php';
   </aside>
 
 </div>
-<footer class="site-footer">Chemical Connect &mdash; A private community platform</footer>
+<footer class="site-footer">AR Tech messanger &mdash; A private community platform</footer>
 <?php require __DIR__ . '/includes/footer.php'; ?>

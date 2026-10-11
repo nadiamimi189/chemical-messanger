@@ -1,6 +1,6 @@
 <?php
 /**
- * Database connection settings for Chemical Connect
+ * Database connection settings for AR Tech messanger
  * Update these 4 values to match your hosting / XAMPP / WAMP setup.
  */
 $DB_HOST = 'localhost';

@@ -52,7 +52,7 @@ if ($chatIsLoggedIn) {
       <?php else: ?>
         <div class="chat-popup-heading">
           <strong id="chatPopupTitle">Chat</strong>
-          <div class="status">Chemical Connect support</div>
+          <div class="status">AR Tech messanger support</div>
         </div>
       <?php endif; ?>
       <button type="button" class="chat-close" aria-label="Close chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>

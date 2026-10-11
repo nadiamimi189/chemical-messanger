@@ -12,7 +12,7 @@ $stmt = $pdo->query("
 ");
 $members = $stmt->fetchAll();
 
-$pageTitle = 'Members - Chemical Connect';
+$pageTitle = 'Members - AR Tech messanger';
 $assetPrefix = '../';
 $activeAdminPage = 'members';
 require __DIR__ . '/../includes/header.php';

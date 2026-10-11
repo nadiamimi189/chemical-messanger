@@ -65,7 +65,7 @@ $threadCommentsStmt = $pdo->prepare("
 ");
 $likeCountStmt = $pdo->prepare('SELECT COUNT(*) AS c FROM post_likes WHERE post_id = ?');
 
-$pageTitle = 'Community Newsfeed - Chemical Connect';
+$pageTitle = 'Community Newsfeed - AR Tech messanger';
 $assetPrefix = '../';
 $bodyClass = 'admin-newsfeed';
 $activeAdminPage = 'newsfeed';
@@ -82,7 +82,7 @@ require __DIR__ . '/../includes/navbar.php';
       </button>
       <div>
         <h1>Community Newsfeed</h1>
-        <p>Latest posts from members and Chemical Connect admins.</p>
+        <p>Latest posts from members and AR Tech messanger admins.</p>
       </div>
     </div>
 
@@ -147,9 +147,7 @@ require __DIR__ . '/../includes/navbar.php';
                 <div class="name"><?php echo e($post['author_name']); ?><span class="badge-admin"><?php echo strtoupper($post['author_role']); ?></span></div>
                 <div class="meta"><?php echo timeAgo($post['created_at']); ?> &bull; <?php echo $isPublicPost ? '🌐 Public to all members' : '🔒 Private member post'; ?></div>
               </div>
-              <?php if ($isPublicPost): ?>
-                <button class="btn btn-sm btn-outline" onclick="deletePost(<?php echo $post['id']; ?>, this)">Delete</button>
-              <?php endif; ?>
+              <button type="button" class="btn btn-sm btn-outline" onclick="deletePost(<?php echo (int)$post['id']; ?>, '<?php echo e($post['post_type']); ?>', this)">Delete</button>
             </div>
             <?php if ($post['content']): ?>
               <div class="post-content"><?php echo nl2br(e($post['content'])); ?></div>
@@ -217,16 +215,31 @@ require __DIR__ . '/../includes/navbar.php';
 </div>
 
 <script>
-  function deletePost(id, btn) {
-    if (!confirm('Delete this post for everyone?')) return;
+  const deletePostCsrfToken = <?php echo json_encode(csrfToken()); ?>;
+
+  function deletePost(id, postType, btn) {
+    if (!confirm('Delete this post? This cannot be undone.')) return;
+    btn.disabled = true;
     fetch('../api/delete_post.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'post_id=' + encodeURIComponent(id)
-    }).then(function (r) { return r.json(); }).then(function (data) {
-      if (data.success) {
-        btn.closest('.post-card').remove();
-      }
+      body: new URLSearchParams({
+        post_id: String(id),
+        post_type: postType,
+        csrf_token: deletePostCsrfToken
+      })
+    }).then(function (r) {
+      return r.json().then(function (data) {
+        if (!r.ok || !data.success) throw new Error(data.message || 'Unable to delete this post.');
+        return data;
+      });
+    }).then(function () {
+      const postCard = btn.closest('.post-card');
+      if (!postCard) throw new Error('Could not find the post to remove from this page.');
+      postCard.remove();
+    }).catch(function (error) {
+      window.alert(error.message || 'Unable to delete this post. Please try again.');
+      btn.disabled = false;
     });
   }
 </script>

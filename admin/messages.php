@@ -37,7 +37,7 @@ if ($activeMember) {
     $mark->execute([$withId, $adminId]);
 }
 
-$pageTitle = 'Messages - Chemical Connect';
+$pageTitle = 'Messages - AR Tech messanger';
 $assetPrefix = '../';
 $bodyClass = 'admin-messages-page';
 $activeAdminPage = 'messages';

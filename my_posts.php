@@ -51,7 +51,7 @@ usort($myPosts, function ($a, $b) {
 });
 $justUploaded = isset($_GET['uploaded']);
 
-$pageTitle = 'My Posts - Chemical Connect';
+$pageTitle = 'My Posts - AR Tech messanger';
 $assetPrefix = '';
 $bodyClass = 'member-app';
 require __DIR__ . '/includes/header.php';
